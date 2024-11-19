@@ -1,0 +1,143 @@
+---
+title: "Sentence embeddings"
+author: "Stephen Gordon"
+format: revealjs
+editor: visual
+---
+
+## Embeddings
+
+- What are they?
+- How are they made?
+- How do we use them?
+- Run an example
+
+## What are they
+What did I know at first?
+
+. . . 
+
+::: {.center-xy}
+![Text gets transformed to numbers!](img/example_simple.png)
+
+:::
+
+## Transformers
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**B**idirectional **E**ncoder **R**epresentations from **T**ransformers are key.
+
+This is why these methods are an improvement upon word2vec and gloVe. It considers the context of a word within its sentence.
+:::
+
+::: {.column width="50%" .fragment}
+![](https://www.techtarget.com/rms/onlineImages/whatis-bert-h.png)
+:::
+
+::::
+
+::: {.notes}
+https://arxiv.org/abs/1706.03762 - Attention Is All You Need
+
+Text is converted to numerical representations called tokens, and each token is converted into a vector via lookup from a word embedding table.[1] At each layer, each token is then contextualized within the scope of the context window with other (unmasked) tokens allowing the signal for key tokens to be amplified and less important tokens to be diminished.
+
+Transformers connect every input of this representation, to an output. And your output can have various different contexts.
+
+https://www.techtarget.com/searchenterpriseai/definition/BERT-language-model
+
+Google's work on transformers made BERT possible. The transformer is the part of the model that gives BERT its increased capacity for understanding context and ambiguity in language. The transformer processes any given word in relation to all other words in a sentence, rather than processing them one at a time. By looking at all surrounding words, the transformer enables BERT to understand the full context of the word and therefore better understand searcher intent.
+
+For example, in the image above, BERT is determining which prior word in the sentence the word "it" refers to, and then using the self-attention mechanism to weigh the options. The word with the highest calculated score is deemed the correct association. In this example, "it" refers to "animal", not "street". If this phrase was a search query, the results would reflect this subtler, more precise understanding BERT reached.
+
+Bidirectional Encoder Representations from Transformers
+:::
+
+## multi-qa-MiniLM-L6-cos-v1 
+This is a sentence-transformers model: It maps sentences & paragraphs to a 384 dimensional dense vector space and was designed for semantic search.
+
+. . . 
+
+It has been trained on 215M (question, answer) pairs from diverse sources.
+
+:::: {.columns .fragment}
+
+::: {.column width="33%"}
+![](https://pbs.twimg.com/profile_images/687042349/Aicon-reverse_400x400.png)
+:::
+
+::: {.column width="33%"}
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Stack_Exchange_icon.svg/1200px-Stack_Exchange_icon.svg.png)
+:::
+
+::: {.column width="33%"}
+And more!
+:::
+
+::::
+
+:::{.notes}
+Our particular flavour of sentence-transformers model is as such.
+The problem we are looking at here is semantic search.
+Utilises SBERT (Sentence BERT) https://sbert.net/ 512 word limit
+What's our objective here? Basically sentiment search, so you'll be looking for documents that are close in meaning to each other.
+
+Important point from the tech spec - Embeddings outputs are normalized
+Note: When loaded with sentence-transformers, this model produces normalized embeddings with length 1. In that case, dot-product and cosine-similarity are equivalent. dot-product is preferred as it is faster. Euclidean distance is proportional to dot-product and can also be used
+
+I've taken the first line from the huggingface card.
+Sentence transfomers basically take text and map it into a high dimensional vector space
+Tokenizaiton is used
+Training data, pairs that are the same as each other.
+An example of the training data
+Training data is 
+There are many different sources to the source -> pair 
+WikiAnswers Duplicate question pairs from WikiAnswers 	77,427,422
+PAQ Automatically generated (Question, Paragraph) pairs for each paragraph in Wikipedia 	64,371,441
+Stack Exchange (Title, Body) pairs from all StackExchanges 	25,316,456
+Stack Exchange (Title, Answer) pairs from all StackExchanges 	21,396,559
+MS MARCO Triplets (query, answer, hard_negative) for 500k queries from Bing search engine 	17,579,773
+GOOAQ: Open Question Answering with Diverse Answer Types (query, answer) pairs for 3M Google queries and Google featured snippet 	3,012,496
+Amazon-QA (Question, Answer) pairs from Amazon product pages 	2,448,839
+Yahoo Answers (Title, Answer) pairs from Yahoo Answers 	1,198,260
+Yahoo Answers (Question, Answer) pairs from Yahoo Answers 	681,164
+Yahoo Answers (Title, Question) pairs from Yahoo Answers 	659,896
+SearchQA (Question, Answer) pairs for 140k questions, each with Top5 Google snippets on that question 	582,261
+ELI5 (Question, Answer) pairs from Reddit ELI5 (explainlikeimfive) 	325,475
+Stack Exchange Duplicate questions pairs (titles) 	304,525
+Quora Question Triplets (Question, Duplicate_Question, Hard_Negative) triplets for Quora Questions Pairs dataset 	103,663
+Natural Questions (NQ) (Question, Paragraph) pairs for 100k real Google queries with relevant Wikipedia paragraph 	100,231
+SQuAD2.0 (Question, Paragraph) pairs from SQuAD2.0 dataset 	87,599
+TriviaQA (Question, Evidence) pairs 	73,346
+:::
+
+## Training data example (from WikiAnswers)
+> q:How many muslims make up indias 1 billion population?
+
+> q:How many of india's population are muslim?
+
+> q:How many populations of muslims in india?
+
+> q:What is population of muslims in india?
+
+> a:Over 160 million Muslims per Pew Forum Study as of October 2009.
+
+## How do we use it? Dimensionality reduction.
+So we can use the similarity search to find cosine similarity between two documents.
+
+However for visualisation and clustering, we need to reduce the dimensions. We can do this using PCA.
+
+:::{.notes}
+For visualisation, we need to reduce dimensions so that we can see the documents.
+And for clustering, we need to reduce dimensions to make the comparison.
+
+:::
+
+## Example!
+Let's run it
+
+# Thank you
+Stephen Gordon
+
+stephen.gordon@ons.gov.uk

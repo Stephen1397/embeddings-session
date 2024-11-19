@@ -50,3 +50,7 @@ rsconnect/
 
 # .env file
 .env
+
+# scratch files
+scratch.py
+scratch.r
